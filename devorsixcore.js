@@ -82,9 +82,11 @@ const fs = require('fs')
 const axios = require('axios')
 const fetch = require('node-fetch')
 const chalk = require('chalk')
+const speed = require('performance-now')
+const moment = require('moment-timezone')
+const os = require('os')
 const util = require('util')
 const { spawn: spawn, exec } = require("child_process")
-const moment = require('moment-timezone')
 //=================================================//
 module.exports = devorsix = handler = async (devorsix, m, chatUpdate, store) => {
 	try {
@@ -238,6 +240,13 @@ module.exports = devorsix = handler = async (devorsix, m, chatUpdate, store) => 
 				quoted: ctt
 			})
 		}
+		
+		// Prepare Media
+        async function prM(params) {
+            return await prepareWAMessageMedia(params, {
+                upload: devorsix.waUploadToServer
+            })
+        }
 //=================================================//
     // Mencetak catatan diconsole saat ada yang mengirim perintah
 
@@ -250,7 +259,7 @@ module.exports = devorsix = handler = async (devorsix, m, chatUpdate, store) => 
            // Lingkup Command "Perintah"
 
 		switch (command) {
-			case "menu": {
+/*			case "menu": {
 				let cap = `
 Library : WS - baileys
 Prefix : ( ${prefix} )
@@ -295,9 +304,65 @@ $ ( cmd-exec )
 					},
 				}, { quoted: ctt })
 			}
-			break
+			break*/
 
-            case 'pe': {
+            case 'menu': {
+                let timestampp = speed()
+                let latensii = speed() - timestampp
+                let run = process.uptime()
+                let teks = `${runtime(run)}`
+                let bajindul = `┌──────────┐
+│  ▢  Simple - Base
+│  ‣  Version  : *${require('./package.json').version}*
+│  ‣  Author   : devorsixcore
+│  ‣  User     : ${m.pushName}
+│  ‣  Prefix   : ${prefix}
+│  ‣  Tanggal  : *${calendar}*
+│  ‣  Jam      : *${time} (Asia/Jakarta)*
+│  ‣  Status   : ${devorsix.public ? 'Public' : 'Self'}
+│  ‣  Speed    : *${latensii.toFixed(4)} Sec*
+│  ‣  Run Time : *${teks}*
+│  ‣  Library  : FzR-Baileys
+└──────────┘
+
+╭───「 Main 」
+│ ▢ .menu
+│ ▢ .public
+│ ▢ .self
+╰──────────
+
+╭───「 Convert 」
+│ ▢ .s
+│ ▢ .sticker
+│ ▢ .toimg
+│ ▢ .shorturl
+│ ▢ .tourl
+╰──────────
+
+╭───「 Owner 」
+│ ▢ > (eval)
+│ ▢ < (eval-async)
+│ ▢ $ (cmd-exec)
+╰──────────`
+                
+                devorsix.sendMessage(m.chat, {
+                    image: wangy,
+                    caption: bajindul,
+                    footer: "# Simple Base Bot By Devorsixcore",
+                    buttons: [
+                        {
+                            buttonId: '.x',
+                            buttonText: { displayText: 'X' },
+                            type: 1,
+                        }
+                    ],
+                    headerType: 1,
+                    viewOnce: true
+                }, { quoted: m });
+            }
+            break
+
+            case 'x': {
                m.reply('kontol')
             }
             break
